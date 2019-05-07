@@ -60,5 +60,18 @@ app.get("/oauth", (req, res) => {
 // Route the endpoint that our slash command will point to and send back a simple
 // response to indicate that ngrok is working
 app.post("/command", (req, res) => {
-    res.send("Your ngrok tunnel is up and running!");
+    res.header("Content-type: application/json");
+    res.send(
+        {
+            attachments: [
+                {
+                    image_url: "https://media.giphy.com/media/67rfI3AQcbHPO0qK8m/giphy.gif"
+                }
+            ],
+            parse: "full",
+            response_type: "in_channel",
+            text: "Deploy!",
+            unfurl_links: true,
+            unfurl_media: true,
+        });
 });
