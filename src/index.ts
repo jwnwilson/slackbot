@@ -1,9 +1,11 @@
 import dotenv from "dotenv";
 import express from "express";
+import giphy from "giphy-api";
 import request from "request";
 
 dotenv.config();
 
+const giphyApi = giphy(process.env.GIPHY_API_KEY);
 const app = express();
 const PORT = process.env.PORT; // default port to listen
 const clientId = process.env.CLIENT_ID; // '123456789.123456789';
@@ -60,18 +62,26 @@ app.get("/oauth", (req, res) => {
 // Route the endpoint that our slash command will point to and send back a simple
 // response to indicate that ngrok is working
 app.post("/command", (req, res) => {
-    res.header("Content-type: application/json");
-    res.send(
-        {
-            attachments: [
-                {
-                    image_url: "https://media.giphy.com/media/67rfI3AQcbHPO0qK8m/giphy.gif"
-                }
-            ],
-            parse: "full",
-            response_type: "in_channel",
-            text: "Deploy!",
-            unfurl_links: true,
-            unfurl_media: true,
-        });
+    giphyApi.random({
+        fmt: "json",
+        rating: "g",
+        tag: "deploy"
+    }, (err, giphyRes) => {
+        // tslint:disable-next-line:no-console
+        console.log(giphyRes.data.url);
+        res.header("Content-type: application/json");
+        res.send(
+            {
+                attachments: [
+                    {
+                        image_url: giphyRes.data.url
+                    }
+                ],
+                parse: "full",
+                response_type: "in_channel",
+                text: "Deploy!",
+                unfurl_links: true,
+                unfurl_media: true,
+            });
+    });
 });
