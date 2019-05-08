@@ -68,13 +68,13 @@ app.post("/command", (req, res) => {
         tag: "deploy"
     }, (err, giphyRes) => {
         // tslint:disable-next-line:no-console
-        console.log(giphyRes.data.url);
+        // console.log(giphyRes.data);
         res.header("Content-type: application/json");
         res.send(
             {
                 attachments: [
                     {
-                        image_url: giphyRes.data.url
+                        image_url: giphyRes.data.images.downsized.url
                     }
                 ],
                 parse: "full",
