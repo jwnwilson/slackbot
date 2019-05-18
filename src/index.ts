@@ -13,6 +13,7 @@ interface IChatPostMessageResult extends WebAPICallResult {
     };
 }
 
+// Load env vars from .env file
 dotenv.config();
 
 const app = express();
@@ -108,10 +109,10 @@ app.post("/command", (req, res) => {
     );
 });
 
+// Basic event end point which will listen for text in a chanel and send a gif to the 
+// channel if it finds the text deploy
 app.post("/event", (req, res) => {
-    // tslint:disable-next-line:no-console
-    console.log(req.body);
-    // Handle verification
+    // Handle verification if necessary
     if (req.body.challenge !== undefined) {
         res.header("Content-type: application/json");
         res.send({
@@ -121,6 +122,7 @@ app.post("/event", (req, res) => {
     }
 
     if (req.body.event !== undefined && req.body.event.text.includes("deploy")) {
+        // Get a giff from giphy api to make response with bot
         giphyApi.random(
             {
                 fmt: "json",
@@ -147,21 +149,13 @@ app.post("/event", (req, res) => {
                 // tslint:disable-next-line:no-console
                 console.log(slackData);
                 slackClient.chat.postMessage(slackData).then((resp: IChatPostMessageResult) => {
-                    if (resp.status !== 200) {
-                        // tslint:disable-next-line:no-console
-                        console.log("Fuuuuuuck");
-                        // tslint:disable-next-line:no-console
-                        console.log(resp);
-                    }
-                    else {
-                        // tslint:disable-next-line:no-console
-                        console.log("Slack message succesfully send.");
-                        // tslint:disable-next-line:no-console
-                        console.log(resp);
-                    }
+                    // tslint:disable-next-line:no-console
+                    console.log("Slack message succesfully send.");
+                    // tslint:disable-next-line:no-console
+                    console.log(resp);
                 }).catch((error) => {
                     // tslint:disable-next-line:no-console
-                    console.log("Fuuuuuuck");
+                    console.log("Slack message failed to send");
                     // tslint:disable-next-line:no-console
                     console.log(error);
                 });
