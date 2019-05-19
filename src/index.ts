@@ -133,6 +133,7 @@ app.post("/event", (req, res) => {
                 // tslint:disable-next-line:no-console
                 console.log("Replying to slack with gif.");
                 res.header("Content-type: application/json");
+                res.header("X-Slack-No-Retry: 1");
                 res.sendStatus(200);
 
                 const slackData = {
